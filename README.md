@@ -13,9 +13,9 @@
 ## Funkcjonalności:
   Aplikacja tworzy serwer, działający domyślnie na adresie http://127.0.0.1:5000/
   Poszczególne funkcje programu:
-    zapytanie GET na endpoincie http://<adres>:<port>/repositories/<username> - Zwraca listę wszystkich publicznych repozytoriów użytkownika
-    zapytanie GET na endpoincie http://<adres>:<port>/stars/<username> - Zwraca sumę gwiazd wszyskich publicznych repozytoriów użytkownika
-    http://<adres>:<port>/ - tradycyjne "Hello World" 
+*    zapytanie GET na endpoincie http://\<adres\>:\<port\>/repositories/\<username\> - Zwraca listę wszystkich publicznych repozytoriów użytkownika
+*    zapytanie GET na endpoincie http://\<adres\>:\<port\>/stars/\<username\> - Zwraca sumę gwiazd wszyskich publicznych repozytoriów użytkownika
+*    http://\<adres\>:\<port\>/ - tradycyjne "Hello World" 
   
 ## Przyszłość aplikacji:
 ###  Istnieją pewne możliwości rozwoju (i poprawy) aplikacji:
