@@ -4,8 +4,9 @@ from GithubHandler import get_repos, get_stars
 app = flask.Flask(__name__)
 
 def main():
-    app.run()
+    app.run(debug=True)
 
+#As tradition says, this is my first web application written in Python
 @app.route('/')
 def hello_world():
     return flask.make_response('Hello, World!')
