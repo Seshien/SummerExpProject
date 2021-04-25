@@ -4,9 +4,10 @@ from GithubHandler import get_repos, get_stars
 app = flask.Flask(__name__)
 
 def main():
-    app.run(debug=True)
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+    app.run()
 
-#As tradition says, this is my first web application written in Python
+#This is my first web application written in Python, so to comply with tradition
 @app.route('/')
 def hello_world():
     return flask.make_response('Hello, World!')

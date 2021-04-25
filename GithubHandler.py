@@ -1,12 +1,18 @@
-import requests, json
+import requests
 import flask
 GH_name = "https://api.github.com/users"
 NOT_FOUND = 404
 LIMIT_REACHED = 477
 ERROR_UNKNOWN = 488
-LIMIT_WARNING = """Warning: Limit of API requests for github was exceeded during processing. \n
-                You have to wait (or change your ip) before trying again.
-                """
+LIMIT_WARNING = ("Warning: Limit of API requests for github was exceeded during processing."
+                " You have to wait (or change your ip) before trying again.")
+USER_ERROR = "User with that username doesn't exist."
+LIMIT_ERROR = ("Limit of API requests for github has been exceeded."
+                " You have to wait (or change your ip) before trying again.")
+UNKNOWN_ERROR = "I did not expect that error"
+
+
+
 
 #Function, which returns a Flask Response. It may have a json list of repositories, but if processing failed,
 # it will have a error message instead.
@@ -31,12 +37,12 @@ def get_stars(user):
         try:
             number = rep['stargazers_count']
             sum += number
-        except KeyError or TypeError as exc:
+        except (KeyError, TypeError) as exc:
             return flask.make_response(flask.jsonify(
-                [sum, LIMIT_WARNING]))
-    return flask.make_response(flask.jsonify(sum))
+                {'stargazers': sum, 'warning': LIMIT_WARNING}))
+    return flask.make_response(flask.jsonify({'stargazers': sum}))
 
-#Function, which return json with data about user from github API.
+#Function, which returns json with data about user from github API.
 def request_user_info(user):
     info_r = requests.get(f'{GH_name}/{user}')
     json_d = info_r.json()
@@ -56,20 +62,18 @@ def validate(json_d):
 #Function, which returns Flask Response with error message.
 def error_value(error):
     if error == NOT_FOUND:
-        return flask.make_response("Error: User with that username doesn't exist.")
+        return flask.make_response({'Error': USER_ERROR})
     elif error == LIMIT_REACHED:
         return flask.make_response(
-            """Error: Limit of API requests for github has been exceeded.\n
-             You have to wait (or change your ip) before trying again.
-            """
-        )
+            {"Error": LIMIT_ERROR})
     else:
-        return flask.make_response(f"Error: I did not expect that error")
+        return flask.make_response({"Error": UNKNOWN_ERROR})
 
 #Functions which go through pages of repositories from github API and returns a complete list of them.
 def get_all_repositories(user, repos_number):
     result = []
-    for page in range(repos_number % 100 + 1):
+    pages = (repos_number // 100) + 1
+    for page in range(pages):
         repos_d = requests.get(f'{GH_name}/{user}/repos',
                                params={'per_page' : '100', 'page' : str(page + 1)}).json()
         if repos_d is dict:
