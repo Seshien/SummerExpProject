@@ -1,11 +1,21 @@
 import flask
+import sys
 from GithubHandler import get_repos, get_stars
 
 app = flask.Flask(__name__)
 
-def main():
+def main(argv):
+    args = simpleParse(argv)
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-    app.run()
+    app.run(**args)
+
+def simpleParse(argv):
+    result = {}
+    for it in ["--port", "--host", "--debug"]:
+        if it in argv:
+            result[it[2:]] = argv[argv.index(it) + 1]
+    return result
+
 
 #This is my first web application written in Python, so to comply with tradition
 @app.route('/')
@@ -22,4 +32,4 @@ def handle_stars(user):
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
